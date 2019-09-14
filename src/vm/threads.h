@@ -1666,6 +1666,9 @@ public:
 
 private:
     DWORD m_dwBeginLockCount;  // lock count when the thread enters current domain
+    DWORD m_dwBeginCriticalRegionCount;  // lock count when the thread enters current domain
+    DWORD m_dwNonHostLockCount;
+    DWORD m_dwCriticalRegionCount;
 
 #ifdef _DEBUG
     DWORD dbg_m_cSuspendedThreads;
@@ -1801,6 +1804,13 @@ public:
     {
         LIMITED_METHOD_CONTRACT;
         return FALSE;
+    }
+
+    void BeginDelayAbort();
+    void EndDelayAbort();
+    BOOL DelayAbortEnabled() const
+    {
+        return false;
     }
 
  private:
@@ -2604,23 +2614,37 @@ private:
     //
     enum ThreadAbortInfo
     {
-        TAI_ThreadAbort       = 0x00000001,
-        TAI_ThreadRudeAbort   = 0x00000004,
-        TAI_FuncEvalAbort     = 0x00000040,
+        TAI_ThreadAbort = 0x00000001,
+        TAI_ThreadV1Abort = 0x00000002,
+        TAI_ThreadRudeAbort = 0x00000004,
+        TAI_ADUnloadAbort = 0x00000008,
+        TAI_ADUnloadV1Abort = 0x00000010,
+        TAI_ADUnloadRudeAbort = 0x00000020,
+        TAI_FuncEvalAbort = 0x00000040,
+        TAI_FuncEvalV1Abort = 0x00000080,
         TAI_FuncEvalRudeAbort = 0x00000100,
+        TAI_ForADUnloadThread = 0x10000000,     // AD unload thread is working on the thread
     };
 
-    static const DWORD TAI_AnySafeAbort = (TAI_ThreadAbort   |
-                                           TAI_FuncEvalAbort
-                                          );
+    static const DWORD TAI_AnySafeAbort = (TAI_ThreadAbort |
+        TAI_ADUnloadAbort |
+        TAI_FuncEvalAbort
+        );
 
-    static const DWORD TAI_AnyRudeAbort = (TAI_ThreadRudeAbort   |
-                                           TAI_FuncEvalRudeAbort
-                                          );
+    static const DWORD TAI_AnyV1Abort = (TAI_ThreadV1Abort |
+        TAI_ADUnloadV1Abort |
+        TAI_FuncEvalV1Abort
+        );
 
-    static const DWORD TAI_AnyFuncEvalAbort = (TAI_FuncEvalAbort   |
-                                           TAI_FuncEvalRudeAbort
-                                          );
+    static const DWORD TAI_AnyRudeAbort = (TAI_ThreadRudeAbort |
+        TAI_ADUnloadRudeAbort |
+        TAI_FuncEvalRudeAbort
+        );
+
+    static const DWORD TAI_AnyFuncEvalAbort = (TAI_FuncEvalAbort |
+        TAI_FuncEvalV1Abort |
+        TAI_FuncEvalRudeAbort
+        );
 
 
     // Specifies type of thread abort.
@@ -2670,6 +2694,7 @@ public:
     {
         UAC_Normal,
         UAC_Host,       // Called by host through IClrTask::Abort
+        UAC_WatchDog,   // Called by ADUnload helper thread
     };
 
     HRESULT        UserAbort(ThreadAbortRequester requester,

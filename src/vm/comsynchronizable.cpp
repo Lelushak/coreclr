@@ -528,6 +528,45 @@ void ThreadNative::StartInner(ThreadBaseObject* pThisUNSAFE)
     GCPROTECT_END();
 }
 
+
+
+FCIMPL1(void, ThreadNative::Abort, ThreadBaseObject* pThis)
+{
+    CONTRACTL
+    {
+        DISABLED(GC_TRIGGERS);
+        THROWS;
+        MODE_COOPERATIVE;
+        SO_TOLERANT;
+    }
+    CONTRACTL_END;
+
+    if (pThis == NULL)
+        FCThrowVoid(kNullReferenceException);
+
+    THREADBASEREF thisRef(pThis);
+    // We need to keep the managed Thread object alive so that we can call UserAbort on
+    // unmanaged thread object.
+    HELPER_METHOD_FRAME_BEGIN_1(thisRef);
+
+    Thread* thread = thisRef->GetInternal();
+    if (thread == NULL)
+        COMPlusThrow(kThreadStateException, IDS_EE_THREAD_CANNOT_GET);
+#ifdef _DEBUG
+    DWORD testAbort = g_pConfig->GetHostTestThreadAbort();
+    if (testAbort != 0) {
+        thread->UserAbort(Thread::TAR_Thread, testAbort == 1 ? EEPolicy::TA_Safe : EEPolicy::TA_Rude, INFINITE, Thread::UAC_Normal);
+    }
+    else
+#endif
+        thread->UserAbort(Thread::TAR_Thread, EEPolicy::TA_V1Compatible, INFINITE, Thread::UAC_Normal);
+
+    if (thread->CatchAtSafePoint())
+        CommonTripThread();
+    HELPER_METHOD_FRAME_END_POLL();
+}
+FCIMPLEND
+
 // Note that you can manipulate the priority of a thread that hasn't started yet,
 // or one that is running.  But you get an exception if you manipulate the priority
 // of a thread that has died.

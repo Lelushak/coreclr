@@ -2,12 +2,16 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Diagnostics.CodeAnalysis;
-using System.Globalization;
-using System.Runtime.ConstrainedExecution;
+using System.Security.Permissions;
 using System.Security.Principal;
+using System.Globalization;
+using System.Collections.Generic;
+using System.Runtime.CompilerServices;
+using System.Runtime.ConstrainedExecution;
+using System.Security;
+using System.Runtime.Versioning;
+using System.Diagnostics.CodeAnalysis;
 
 namespace System.Threading
 {
@@ -176,10 +180,17 @@ namespace System.Threading
             }
         }
 
+        [SecuritySafeCritical]
+        [SecurityPermissionAttribute(SecurityAction.Demand, ControlThread = true)]
         public void Abort()
         {
-            throw new PlatformNotSupportedException(SR.PlatformNotSupported_ThreadAbort);
+            AbortInternal();
         }
+
+		[System.Security.SecurityCritical]  // auto-generated
+        [ResourceExposure(ResourceScope.None)]
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        private extern void AbortInternal();
 
         public void Abort(object? stateInfo)
         {

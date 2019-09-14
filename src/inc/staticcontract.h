@@ -194,6 +194,7 @@
 #define STATIC_CONTRACT_WRAPPER             ANNOTATION_FN_WRAPPER
 
 #define STATIC_CONTRACT_ENTRY_POINT
+#define STATIC_CONTRACT_SO_TOLERANT
 
 #ifdef _DEBUG
 #define STATIC_CONTRACT_DEBUG_ONLY                                  \
