@@ -50,6 +50,8 @@ class EEContract : public BaseContract
 #define MODE_PREEMPTIVE      do { STATIC_CONTRACT_MODE_PREEMPTIVE; REQUEST_TEST(Contract::MODE_Preempt,  Contract::MODE_Disabled); } while(0)
 #define MODE_ANY             do { STATIC_CONTRACT_MODE_ANY; REQUEST_TEST(Contract::MODE_Disabled, Contract::MODE_Disabled); } while(0)
 
+#define SO_TOLERANT  do { STATIC_CONTRACT_SO_TOLERANT; REQUEST_TEST(Contract::SO_TOLERANT_Yes, Contract::SO_TOLERANCE_Disabled); } while(0)
+
 #define GC_TRIGGERS          do { STATIC_CONTRACT_GC_TRIGGERS; REQUEST_TEST(Contract::GC_Triggers,   Contract::GC_Disabled); } while(0)
 #define GC_NOTRIGGER         do { STATIC_CONTRACT_GC_NOTRIGGER; REQUEST_TEST(Contract::GC_NoTrigger,  Contract::GC_Disabled); } while(0)
 
@@ -69,6 +71,7 @@ class EEContract : public BaseContract
 #else   // ENABLE_CONTRACTS_IMPL
 
 #define MODE_COOPERATIVE
+#define SO_TOLERANT
 #define MODE_PREEMPTIVE
 #define MODE_ANY
 #define GC_TRIGGERS

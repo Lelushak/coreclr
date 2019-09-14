@@ -937,6 +937,11 @@ class BaseContract
         MODE_Preempt        = 0x00000040,
         MODE_Coop           = 0x00000080,
 
+        SO_TOLERANCE_Mask = 0x00000300,
+        SO_TOLERANT_No = 0x00000000,           // the default.
+        SO_TOLERANT_Yes = 0x00000100,
+        SO_TOLERANCE_Disabled = 0x00000200,
+
         DEBUG_ONLY_Yes          = 0x00000400,  // code runs under debug only
 
         SO_MAINLINE_No          = 0x00000800,  // code is not part of our mainline SO scenario

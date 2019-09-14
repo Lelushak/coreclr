@@ -63,6 +63,7 @@ public:
 
     static void StartInner(ThreadBaseObject* pThisUNSAFE);
 
+    static FCDECL1(void, Abort, ThreadBaseObject* pThis);   
     static FCDECL1(void,    Start,             ThreadBaseObject* pThisUNSAFE);
     static FCDECL1(INT32,   GetPriority,       ThreadBaseObject* pThisUNSAFE);
     static FCDECL2(void,    SetPriority,       ThreadBaseObject* pThisUNSAFE, INT32 iPriority);
@@ -90,6 +91,7 @@ public:
     UINT64 QCALLTYPE GetProcessDefaultStackSize();
 
     static FCDECL1(INT32,   GetManagedThreadId, ThreadBaseObject* th);
+
     static INT32 QCALLTYPE GetOptimalMaxSpinWaitsPerSpinIteration();
     static FCDECL1(void,    SpinWait,                       int iterations);
     static BOOL QCALLTYPE YieldThread();

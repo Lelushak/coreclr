@@ -2070,6 +2070,10 @@ void Thread::MarkThreadForAbort(ThreadAbortRequester requester, EEPolicy::Thread
         {
             abortInfo |= TAI_ThreadAbort;
         }
+		else if (abortType == EEPolicy::TA_V1Compatible)
+		{
+            abortInfo |= TAI_ThreadV1Abort;			
+		}
         else if (abortType == EEPolicy::TA_Rude)
         {
             abortInfo |= TAI_ThreadRudeAbort;

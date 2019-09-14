@@ -405,6 +405,17 @@
     <!-- These files are shared with other framework components and don't live the same folder as the rest of them-->
     <Compile Include="$(CommonPath)\NotImplemented.cs" />
     <Compile Include="$(CommonPath)\System\SR.cs" />
+	<Compile Include="shared\System\Runtime\Versioning\ComponentGuaranteesAttribute.cs" />
+    <Compile Include="shared\System\Runtime\Versioning\ComponentGuaranteesOptions.cs" />
+    <Compile Include="shared\System\Runtime\Versioning\FrameworkName.cs" />
+    <Compile Include="shared\System\Runtime\Versioning\ResourceConsumptionAttribute.cs" />
+    <Compile Include="shared\System\Runtime\Versioning\ResourceExposureAttribute.cs" />
+    <Compile Include="shared\System\Runtime\Versioning\ResourceScope.cs" />
+    <Compile Include="shared\System\Security\CodeAccessSecurityAttribute.cs" />
+    <Compile Include="shared\System\Security\SecurityAction.cs" />
+    <Compile Include="shared\System\Security\SecurityAttribute.cs" />
+    <Compile Include="shared\System\Security\SecurityPermissionAttribute.cs" />
+    <Compile Include="shared\System\Security\SecurityPermissionFlag.cs" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="src\System\Runtime\RuntimeImports.cs" />
